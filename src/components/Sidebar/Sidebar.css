@@ -1,0 +1,87 @@
+/* Sidebar.css */
+.sidebar {
+    width: 280px;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #2c3e50 0%, #1a2530 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 3px 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.logo-container {
+    padding: 25px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #3498db, #1abc9c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.menu-items {
+    padding: 20px 0;
+    flex: 1;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 5px 10px;
+    border-radius: 8px;
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.menu-item.active {
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.icon-container {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.item-name {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1abc9c, #3498db);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 12px;
+}
+
+.username {
+    font-size: 0.9rem;
+    opacity: 0.85;
+}

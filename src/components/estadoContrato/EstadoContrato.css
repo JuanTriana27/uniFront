@@ -1,0 +1,106 @@
+/* EstadoContrato.css */
+
+.estado-contrato-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.section-header {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #3498db;
+}
+
+/* Lista de estado-contrato */
+.estado-contrato-list {
+    background: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+.estado-contrato-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.estado-contrato-table th {
+    background: linear-gradient(135deg, #2c3e50, #1a2530);
+    color: white;
+    text-align: left;
+    padding: 15px 20px;
+    font-weight: 500;
+}
+
+.estado-contrato-table td {
+    padding: 12px 20px;
+    border-bottom: 1px solid #e9ecef;
+    color: #495057;
+}
+
+.estado-contrato-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.estado-contrato-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.estado-contrato-table tr:nth-child(even):hover {
+    background-color: #f1f3f5;
+}
+
+.error-message {
+    background-color: #ffe0e0;
+    border: 1px solid #e00000;
+    color: #a00000;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.success-message {
+    background-color: #e0ffe0;
+    border: 1px solid #00c000;
+    color: #006000;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .estado-contrato-table th,
+    .estado-contrato-table td {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.estado-contrato-list {
+    animation: fadeIn 0.5s ease-in-out;
+}
