@@ -16,13 +16,27 @@ function PropiedadList({ onEditPropiedad }) {
     };
 
     const handleDelete = async (id) => {
+        // 1️⃣ Optimismo: elimino enseguida del state
+        setPropiedades(prev => prev.filter(p => p.idPropiedad !== id));
+
         try {
+            // 2️⃣ Luego llamo al backend (puede fallar, pero la UI ya quitó la fila)
             await api.delete(`/propiedad/delete/${id}`);
+
+            // 3️⃣ Mensaje de éxito
             setSuccessMsg("Propiedad eliminada exitosamente");
-            fetchPropiedades();
-            setTimeout(() => setSuccessMsg(""), 3000);
         } catch (error) {
             console.error("Error eliminando propiedad", error);
+
+            // 4️⃣ Opcional: si quieres avisar al usuario del fallo
+            alert("No se pudo completar el borrado en el servidor:\n" +
+                (error.response?.data?.mensaje || error.message));
+
+            // 5️⃣ (Opcional) Si prefieres revertir la eliminación en caso de error:
+            // fetchPropiedades();
+        } finally {
+            // 6️⃣ Limpio mensaje después de un rato
+            setTimeout(() => setSuccessMsg(""), 3000);
         }
     };
 

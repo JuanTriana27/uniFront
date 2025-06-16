@@ -17,10 +17,68 @@ function PropiedadForm({ onCreated, propiedadToEdit }) {
         idTipoPropiedad: "",
         idEstadoPropiedad: "",
     });
+
     const [isEditing, setIsEditing] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
 
+    // Estados para las opciones de los selects
+    const [propietarios, setPropietarios] = useState([]);
+    const [asesores, setAsesores] = useState([]);
+    const [tiposPropiedad, setTiposPropiedad] = useState([]);
+    const [estadosPropiedad, setEstadosPropiedad] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // Cargar opciones y datos iniciales
     useEffect(() => {
+        const cargarOpciones = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                setLoading(true);
+
+                // Cargar todas las personas
+                const personasRes = await api.get("/persona/todos");
+                const todasPersonas = personasRes.data;  // Declaración aquí
+
+                // Filtrar propietarios (usando tipoPersona)
+                const propietariosFiltrados = todasPersonas.filter(
+                    persona => persona.tipoPersona === 'PROPIETARIO'
+                );
+
+                // Filtrar asesores (usando tipoPersona)
+                const asesoresFiltrados = todasPersonas.filter(
+                    persona => persona.tipoPersona === 'ASESOR'
+                );
+
+                setPropietarios(todasPersonas);
+                setAsesores(todasPersonas);
+
+                // Cargar tipos y estados de propiedad
+                const [tiposRes, estadosRes] = await Promise.all([
+                    api.get("/tipo-propiedad/todos"),
+                    api.get("/estado-propiedad/todos")
+                ]);
+
+                setTiposPropiedad(tiposRes.data);
+                setEstadosPropiedad(estadosRes.data);
+
+                setLoading(false);
+
+                // CONSOLE LOG PARA VERIFICAR DATOS
+                console.log("Personas cargadas:", todasPersonas);
+                console.log("Propietarios:", propietariosFiltrados);
+                console.log("Asesores:", asesoresFiltrados);
+            } catch (error) {
+                console.error("Error cargando opciones", error);
+                setError("Error cargando datos. Por favor recarga la página.");
+                setLoading(false);
+            }
+        };
+
+        cargarOpciones();
+
+        // Manejar propiedad a editar
         if (propiedadToEdit) {
             const safeToString = (v) => (v != null ? v.toString() : "");
             setForm({
@@ -39,23 +97,27 @@ function PropiedadForm({ onCreated, propiedadToEdit }) {
             });
             setIsEditing(true);
         } else {
-            setIsEditing(false);
-            setForm({
-                idPropiedad: "",
-                direccion: "",
-                ciudad: "",
-                codigoPostal: "",
-                metrosCuadrados: "",
-                habitaciones: "",
-                banos: "",
-                precio: "",
-                idPropietario: "",
-                idAsesor: "",
-                idTipoPropiedad: "",
-                idEstadoPropiedad: "",
-            });
+            resetForm();
         }
     }, [propiedadToEdit]);
+
+    const resetForm = () => {
+        setForm({
+            idPropiedad: "",
+            direccion: "",
+            ciudad: "",
+            codigoPostal: "",
+            metrosCuadrados: "",
+            habitaciones: "",
+            banos: "",
+            precio: "",
+            idPropietario: "",
+            idAsesor: "",
+            idTipoPropiedad: "",
+            idEstadoPropiedad: "",
+        });
+        setIsEditing(false);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -87,46 +149,30 @@ function PropiedadForm({ onCreated, propiedadToEdit }) {
                 setSuccessMsg("Propiedad creada con éxito");
             }
 
-            // Limpiar y notificar
             setTimeout(() => setSuccessMsg(""), 3000);
-            setForm({
-                idPropiedad: "",
-                direccion: "",
-                ciudad: "",
-                codigoPostal: "",
-                metrosCuadrados: "",
-                habitaciones: "",
-                banos: "",
-                precio: "",
-                idPropietario: "",
-                idAsesor: "",
-                idTipoPropiedad: "",
-                idEstadoPropiedad: "",
-            });
-            setIsEditing(false);
+            resetForm();
             onCreated();
         } catch (error) {
             console.error("Error en la operación", error);
+            setSuccessMsg("Error al guardar: " + (error.response?.data?.message || error.message));
+            setTimeout(() => setSuccessMsg(""), 5000);
         }
     };
 
     const handleCancelEdit = () => {
-        setIsEditing(false);
-        setForm({
-            idPropiedad: "",
-            direccion: "",
-            ciudad: "",
-            codigoPostal: "",
-            metrosCuadrados: "",
-            habitaciones: "",
-            banos: "",
-            precio: "",
-            idPropietario: "",
-            idAsesor: "",
-            idTipoPropiedad: "",
-            idEstadoPropiedad: "",
-        });
+        resetForm();
+        if (typeof onCreated === 'function') {
+            onCreated();
+        }
     };
+
+    if (loading) {
+        return <div className="loading">Cargando opciones...</div>;
+    }
+
+    if (error) {
+        return <div className="error">{error}</div>;
+    }
 
     return (
         <div className="propiedad-form">
@@ -135,7 +181,7 @@ function PropiedadForm({ onCreated, propiedadToEdit }) {
             </h2>
 
             {successMsg && (
-                <div className="success-message">
+                <div className={successMsg.includes("Error") ? "error-message" : "success-message"}>
                     {successMsg}
                 </div>
             )}
@@ -239,56 +285,76 @@ function PropiedadForm({ onCreated, propiedadToEdit }) {
                     />
                 </div>
 
+                {/* Select para Propietarios - Asegúrate que prop tenga nombre y apellido */}
                 <div className="form-group">
-                    <input
+                    <select
                         name="idPropietario"
-                        type="number"
-                        placeholder="ID Propietario"
                         onChange={handleChange}
                         value={form.idPropietario}
                         className="form-input"
-                        min="1"
                         required
-                    />
+                    >
+                        <option value="">Seleccione un propietario</option>
+                        {propietarios.map(p => (
+                            <option key={p.idPersona} value={p.idPersona}>
+                                {p.nombre} {p.apellido}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
+                {/* Select para Asesores - CORREGIDO: name="idAsesor" */}
                 <div className="form-group">
-                    <input
+                    <select
                         name="idAsesor"
-                        type="number"
-                        placeholder="ID Asesor"
                         onChange={handleChange}
                         value={form.idAsesor}
                         className="form-input"
-                        min="1"
                         required
-                    />
+                    >
+                        <option value="">Seleccione un asesor</option>
+                        {asesores.map(p => (
+                            <option key={p.idPersona} value={p.idPersona}>
+                                {p.nombre} {p.apellido}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
+                {/* Select para Tipos de Propiedad */}
                 <div className="form-group">
-                    <input
+                    <select
                         name="idTipoPropiedad"
-                        type="number"
-                        placeholder="ID Tipo Propiedad"
                         onChange={handleChange}
                         value={form.idTipoPropiedad}
                         className="form-input"
-                        min="1"
                         required
-                    />
+                    >
+                        <option value="">Seleccione un tipo</option>
+                        {tiposPropiedad.map(tipo => (
+                            <option key={tipo.idTipoPropiedad} value={tipo.idTipoPropiedad}>
+                                {tipo.descripcion}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
+                {/* Select para Estados de Propiedad */}
                 <div className="form-group">
-                    <input
+                    <select
                         name="idEstadoPropiedad"
-                        type="number"
-                        placeholder="ID Estado Propiedad"
                         onChange={handleChange}
                         value={form.idEstadoPropiedad}
                         className="form-input"
-                        min="1"
                         required
-                    />
+                    >
+                        <option value="">Seleccione un estado</option>
+                        {estadosPropiedad.map(estado => (
+                            <option key={estado.idEstadoPropiedad} value={estado.idEstadoPropiedad}>
+                                {estado.descripcion}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <div
