@@ -1,45 +1,105 @@
-import React from 'react';
-import './Sidebar.css';
+import React, { useState, useEffect } from "react";
+import "./Sidebar.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    People as PeopleIcon,
-    Home as HomeIcon,
-    Description as ContractIcon,
-    AssignmentTurnedIn as StatusIcon,
-    Category as TypeIcon,
-    CheckCircle as PropertyStatusIcon,
-    AttachMoney as SaleIcon
-} from '@mui/icons-material';
+    faHome,
+    faUser,
+    faFileContract,
+    faListCheck,
+    faBuilding,
+    faHouseChimney,
+    faDollarSign,
+    faBars,
+    faTimes,
+    faBuildingShield,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = ({ activeItem, setActiveItem }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    // Detectar si es móvil
+    useEffect(() => {
+        const checkMobile = () => {
+            const mobile = window.innerWidth <= 768;
+            setIsMobile(mobile);
+        };
+
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     const menuItems = [
-        { name: 'Persona', icon: <PeopleIcon /> },
-        { name: 'Propiedad', icon: <HomeIcon /> },
-        { name: 'Contrato Arrendamiento', icon: <ContractIcon /> },
-        { name: 'Estado Contrato', icon: <StatusIcon /> },
-        { name: 'Tipo Propiedad', icon: <TypeIcon /> },
-        { name: 'Estado Propiedad', icon: <PropertyStatusIcon /> },
-        { name: 'Venta Propiedad', icon: <SaleIcon /> }
+        { name: "Home", icon: faHome },
+        { name: "Persona", icon: faUser },
+        { name: "Propiedad", icon: faHouseChimney },
+        { name: "Contrato Arrendamiento", icon: faFileContract },
+        { name: "Estado Contrato", icon: faListCheck },
+        { name: "Tipo Propiedad", icon: faBuilding },
+        { name: "Estado Propiedad", icon: faBuildingShield },
+        { name: "Venta Propiedad", icon: faDollarSign },
     ];
 
-    return (
-        <div className="sidebar">
-            <div className="logo-container">
-                <div className="logo">Gestión Inmobiliaria</div>
-            </div>
+    const handleItemClick = (itemName) => {
+        setActiveItem(itemName);
+        if (isMobile) {
+            setIsOpen(false); // Cerrar sidebar en móvil después de hacer clic
+        }
+    };
 
-            <div className="menu-items">
-                {menuItems.map((item) => (
-                    <div
-                        key={item.name}
-                        className={`menu-item ${activeItem === item.name ? 'active' : ''}`}
-                        onClick={() => setActiveItem(item.name)}
-                    >
-                        <div className="icon-container">{item.icon}</div>
-                        <span className="item-name">{item.name}</span>
+    const toggleSidebar = () => {
+        setIsOpen(!isOpen);
+    };
+
+    return (
+        <>
+            {/* Botón hamburguesa solo en móvil */}
+            {isMobile && (
+                <button className="sidebar-toggle" onClick={toggleSidebar}>
+                    <FontAwesomeIcon icon={isOpen ? faTimes : faBars} />
+                </button>
+            )}
+
+            {/* Overlay solo en móvil */}
+            {isMobile && (
+                <div
+                    className={`sidebar-overlay ${isOpen ? 'open' : ''}`}
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
+
+            {/* Sidebar - Siempre visible en desktop, controlado por isOpen en móvil */}
+            <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+                <div className="sidebar-header">
+                    <div className="sidebar-logo">
+                        <FontAwesomeIcon icon={faBuilding} className="sidebar-logo-icon" />
+                        <span className="sidebar-logo-text">Gestión Inmobiliaria</span>
                     </div>
-                ))}
-            </div>
-        </div>
+                </div>
+
+                <nav className="sidebar-nav">
+                    <ul className="sidebar-menu">
+                        {menuItems.map((item) => (
+                            <li key={item.name} className="sidebar-item">
+                                <div
+                                    className={`sidebar-link ${activeItem === item.name ? "active" : ""
+                                        }`}
+                                    onClick={() => handleItemClick(item.name)}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={item.icon}
+                                        className="sidebar-icon"
+                                    />
+                                    <span className="sidebar-text">{item.name}</span>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+            </aside>
+        </>
     );
 };
 

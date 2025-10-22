@@ -1,87 +1,146 @@
-/* Sidebar.css */
+.sidebar-container {
+    display: flex;
+    min-height: 100vh;
+}
+
 .sidebar {
+    background: linear-gradient(180deg, #1f2a44 0%, #283e51 100%);
+    color: #fff;
     width: 280px;
     min-height: 100vh;
-    background: linear-gradient(180deg, #2c3e50 0%, #1a2530 100%);
-    color: white;
+    transition: all 0.3s ease;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
-    box-shadow: 3px 0 15px rgba(0, 0, 0, 0.2);
 }
 
-.logo-container {
-    padding: 25px 20px;
+.sidebar-header {
+    padding: 1.5rem 1.5rem 1rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem;
 }
 
-.logo {
-    font-size: 1.5rem;
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     font-weight: 600;
-    text-align: center;
-    letter-spacing: 1px;
-    background: linear-gradient(90deg, #3498db, #1abc9c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: 1.3rem;
 }
 
-.menu-items {
-    padding: 20px 0;
+.sidebar-logo-icon {
+    font-size: 1.5rem;
+    color: #3498db;
+}
+
+.sidebar-nav {
     flex: 1;
+    padding: 0 1rem;
 }
 
-.menu-item {
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-item {
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-link {
     display: flex;
     align-items: center;
-    padding: 15px 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin: 5px 10px;
+    padding: 0.85rem 1rem;
+    color: #e0e0e0;
+    text-decoration: none;
     border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
 }
 
-.menu-item:hover {
-    background: rgba(255, 255, 255, 0.08);
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: translateX(5px);
 }
 
-.menu-item.active {
-    background: linear-gradient(90deg, #3498db, #2980b9);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.sidebar-link.active {
+    background: #3498db;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
 }
 
-.icon-container {
-    margin-right: 15px;
-    display: flex;
-    align-items: center;
+.sidebar-icon {
+    width: 20px;
+    margin-right: 0.75rem;
+    text-align: center;
+    font-size: 1.1rem;
 }
 
-.item-name {
-    font-size: 1rem;
+.sidebar-text {
     font-weight: 500;
+    white-space: nowrap;
 }
 
-.sidebar-footer {
-    padding: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+/* Main Content */
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2rem;
+    min-height: 100vh;
+    background: #f8f9fa;
 }
 
-.user-info {
-    display: flex;
-    align-items: center;
-}
+/* Mobile Styles - Sidebar se esconde y muestra hamburguesa */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+    }
 
-.avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #1abc9c, #3498db);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    margin-right: 12px;
-}
+    .sidebar.open {
+        transform: translateX(0);
+    }
 
-.username {
-    font-size: 0.9rem;
-    opacity: 0.85;
+    .main-content {
+        margin-left: 0;
+        padding: 1rem;
+        padding-top: 4rem;
+    }
+
+    .sidebar-toggle {
+        display: block;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1100;
+        background: #3498db;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        padding: 0.75rem;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        font-size: 1.2rem;
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+    }
+
+    .sidebar-overlay.open {
+        display: block;
+    }
 }
