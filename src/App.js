@@ -1,6 +1,6 @@
 // src/App.jsx - CORREGIDO
 import { useState } from "react";
-import Sidebar from './components/sidebar/Sidebar';
+import Sidebar from './components/sidBar/Sidebar.jsx';
 import Home from "./components/home/Home";
 import Persona from "./components/persona/Persona";
 import Propiedad from "./components/propiedad/Propiedades";
