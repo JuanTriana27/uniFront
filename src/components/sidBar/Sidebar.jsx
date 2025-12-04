@@ -35,11 +35,11 @@ const Sidebar = ({ activeItem, setActiveItem }) => {
         { name: "Home", icon: faHome },
         { name: "Persona", icon: faUser },
         { name: "Propiedad", icon: faHouseChimney },
-        { name: "Contrato Arrendamiento", icon: faFileContract },
         { name: "Estado Contrato", icon: faListCheck },
         { name: "Tipo Propiedad", icon: faBuilding },
         { name: "Estado Propiedad", icon: faBuildingShield },
         { name: "Venta Propiedad", icon: faDollarSign },
+        { name: "Contrato Arrendamiento", icon: faFileContract },
     ];
 
     const handleItemClick = (itemName) => {

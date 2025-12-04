@@ -2,21 +2,33 @@
 import { useState, useEffect } from "react";
 import {
     getEstadosPropiedad,
-    createEstadoPropiedad
+    createEstadoPropiedad,
+    updateEstadoPropiedad,
+    deleteEstadoPropiedad
 } from "../services/EstadoPropiedadService";
 import "./EstadoPropiedad.css";
 import {
-    FaPlus,
     FaEdit,
     FaTrash,
+    FaPlus,
+    FaUser,
+    FaUserAlt,
+    FaPhone,
+    FaEnvelope,
+    FaMapMarkerAlt,
+    FaCity,
+    FaMapPin,
+    FaExclamationTriangle,
     FaSave,
     FaTimes,
     FaClipboardCheck,
-    FaExclamationTriangle
+    FaCheckCircle,
+    FaTimesCircle
 } from "react-icons/fa";
 
 export default function EstadoPropiedad() {
     const [estados, setEstados] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [formModalOpen, setFormModalOpen] = useState(false);
     const [estadoToEdit, setEstadoToEdit] = useState(null);
@@ -36,7 +48,7 @@ export default function EstadoPropiedad() {
             setEstados(data);
         } catch (err) {
             console.error("Error cargando estados de propiedad:", err);
-            setMsg("❌ Error cargando estados de propiedad");
+            setMsg("Error cargando estados de propiedad");
         } finally {
             setLoading(false);
         }
@@ -45,6 +57,35 @@ export default function EstadoPropiedad() {
     useEffect(() => {
         loadData();
     }, []);
+
+    const openModal = (persona = null) => {
+        if (persona) {
+            setEstadoToEdit(persona);
+            setForm({
+                nombre: persona.nombre,
+                apellido: persona.apellido,
+                telefono: persona.telefono,
+                email: persona.email,
+                direccion: persona.direccion,
+                ciudad: persona.ciudad,
+                codigoPostal: persona.codigo_postal,
+            });
+        } else {
+            setEstadoToEdit(null);
+            setForm({
+                nombre: "",
+                apellido: "",
+                telefono: "",
+                email: "",
+                direccion: "",
+                ciudad: "",
+                codigoPostal: "",
+            });
+        }
+        setModalOpen(true);
+    };
+
+    const closeModal = () => setModalOpen(false);
 
     const openFormModal = (estado = null) => {
         if (estado) {
@@ -85,21 +126,31 @@ export default function EstadoPropiedad() {
             };
 
             if (!payload.nombre) {
-                setMsg("❌ El nombre es obligatorio");
+                setMsg("El nombre es obligatorio");
                 setTimeout(() => setMsg(""), 3000);
                 return;
             }
 
-            await createEstadoPropiedad(payload);
-            setMsg("✅ Estado de propiedad creado correctamente");
+            if (estadoToEdit) {
+                // EDITAR
+                await updateEstadoPropiedad(estadoToEdit.idEstadoPropiedad, payload);
+                setMsg("Estado de propiedad actualizado correctamente");
+            } else {
+                // CREAR
+                await createEstadoPropiedad(payload);
+                setMsg("Estado de propiedad creado correctamente");
+            }
+
             setTimeout(() => setMsg(""), 3000);
             closeFormModal();
             loadData();
+
         } catch (err) {
             console.error(err);
-            setMsg("❌ Error creando estado de propiedad");
+            setMsg("Error procesando la solicitud");
         }
     };
+
 
     const confirmDelete = (estado) => {
         setEstadoToDelete(estado);
@@ -109,9 +160,8 @@ export default function EstadoPropiedad() {
     const handleDelete = async () => {
         if (!estadoToDelete) return;
         try {
-            // Aquí deberías tener un servicio deleteEstadoPropiedad
-            // await deleteEstadoPropiedad(estadoToDelete.idEstadoPropiedad);
-            setMsg("✅ Estado de propiedad eliminado correctamente");
+            await deleteEstadoPropiedad(estadoToDelete.idEstadoPropiedad);
+            setMsg("Estado de propiedad eliminado correctamente");
             setTimeout(() => setMsg(""), 3000);
             loadData();
         } catch (err) {
@@ -188,6 +238,66 @@ export default function EstadoPropiedad() {
                                 {estadoToEdit ? " Editar Estado" : " Crear Estado de Propiedad"}
                             </h3>
                             <button className="close-btn" onClick={closeFormModal}>
+                                <FaTimes />
+                            </button>
+                        </div>
+
+                        <form className="compact-form" onSubmit={handleSubmit}>
+                            <div className="form-grid-compact">
+                                <div className="form-group-compact">
+                                    <label>
+                                        <FaClipboardCheck />
+                                        Nombre
+                                    </label>
+                                    <input
+                                        name="nombre"
+                                        type="text"
+                                        value={form.nombre}
+                                        onChange={handleChange}
+                                        required
+                                        placeholder="Ingrese el nombre del estado"
+                                    />
+                                </div>
+
+                                <div className="form-group-compact">
+                                    <label>
+                                        <FaClipboardCheck />
+                                        Descripción
+                                    </label>
+                                    <input
+                                        name="descripcion"
+                                        type="text"
+                                        value={form.descripcion}
+                                        onChange={handleChange}
+                                        placeholder="Ingrese la descripción (opcional)"
+                                    />
+                                </div>
+                            </div>
+                            <div className="form-actions-compact">
+                                <button type="submit" className="submit-btn-compact">
+                                    <FaSave />
+                                    {estadoToEdit ? " Guardar" : " Crear"}
+                                </button>
+                                <button type="button" className="cancel-btn-compact" onClick={closeFormModal}>
+                                    <FaTimes />
+                                    Cancelar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal Crear/Editar */}
+            {modalOpen && (
+                <div className="modal-overlay" onClick={closeModal}>
+                    <div className="modal-content compact-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>
+                                {estadoToEdit ? <FaEdit /> : <FaUser />}
+                                {estadoToEdit ? " Editar Persona" : " Crear Persona"}
+                            </h3>
+                            <button className="close-btn" onClick={closeModal}>
                                 <FaTimes />
                             </button>
                         </div>

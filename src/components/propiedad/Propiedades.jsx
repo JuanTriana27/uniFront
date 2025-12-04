@@ -71,9 +71,9 @@ export default function Propiedades() {
                 getEstadosPropiedad()
             ]);
 
-            console.log("Personas cargadas:", personasData);
-            console.log("Tipos de propiedad:", tiposData);
-            console.log("Estados de propiedad:", estadosData);
+            //console.log("Personas cargadas:", personasData);
+            //console.log("Tipos de propiedad:", tiposData);
+            //console.log("Estados de propiedad:", estadosData);
 
             setPropiedades(propiedadesData);
             // No guardamos personas en el estado ya que no se usa directamente
@@ -99,9 +99,6 @@ export default function Propiedades() {
                     p.rol === 'ASESOR' ||
                     p.tipo === 'ASESOR';
             });
-
-            console.log("Propietarios filtrados:", propietariosFiltrados);
-            console.log("Asesores filtrados:", asesoresFiltrados);
 
             // Si no encontramos con los filtros anteriores, mostramos todas las personas
             if (propietariosFiltrados.length === 0) {
