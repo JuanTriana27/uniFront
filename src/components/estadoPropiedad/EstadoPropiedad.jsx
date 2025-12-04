@@ -12,18 +12,10 @@ import {
     FaTrash,
     FaPlus,
     FaUser,
-    FaUserAlt,
-    FaPhone,
-    FaEnvelope,
-    FaMapMarkerAlt,
-    FaCity,
-    FaMapPin,
     FaExclamationTriangle,
     FaSave,
     FaTimes,
-    FaClipboardCheck,
-    FaCheckCircle,
-    FaTimesCircle
+    FaClipboardCheck
 } from "react-icons/fa";
 
 export default function EstadoPropiedad() {

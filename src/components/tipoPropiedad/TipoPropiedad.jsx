@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { getTiposPropiedad, createTipoPropiedad, updateTipoPropiedad, deleteTipoPropiedad } from "../services/TipoPropiedadService";
 import "./TipoPropiedad.css";
 import {
-    FaEdit, FaTrash, FaPlus, FaUser, FaUserAlt, FaPhone, FaEnvelope,
-    FaMapMarkerAlt, FaCity, FaMapPin, FaExclamationTriangle,
+    FaEdit, FaTrash, FaPlus, FaUser, FaUserAlt, FaMapPin, FaExclamationTriangle,
     FaSave, FaTimes, FaCheckCircle, FaTimesCircle
 } from "react-icons/fa";
 
