@@ -1,4 +1,3 @@
-// EstadoPropiedad.jsx
 import { useState, useEffect } from "react";
 import {
     getEstadosPropiedad,
@@ -8,15 +7,12 @@ import {
 } from "../services/EstadoPropiedadService";
 import "./EstadoPropiedad.css";
 import {
-    FaEdit,
-    FaTrash,
-    FaPlus,
-    FaUser,
+    FaEdit, FaTrash, FaPlus, FaUser,
     FaExclamationTriangle,
-    FaSave,
-    FaTimes,
-    FaClipboardCheck
+    FaSave, FaTimes, FaClipboardCheck
 } from "react-icons/fa";
+
+
 
 export default function EstadoPropiedad() {
     const [estados, setEstados] = useState([]);
