@@ -86,7 +86,7 @@ export default function TipoPropiedad() {
 
     // ============== MANEJO DE FORMULARIO ================
     // Actualizar campo del formulario
-    const   manejarCambio = (t) => {
+    const manejarCambio = (t) => {
         const { name, value } = t.target;
         setFormulario(prev => ({ ...prev, [name]: value }));
     };

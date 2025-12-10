@@ -34,7 +34,7 @@ export default function Personas() {
         { name: "email", label: "Email", icon: <FaEnvelope />, type: "email" },
         { name: "direccion", label: "Dirección", icon: <FaMapMarkerAlt />, type: "text" },
         { name: "ciudad", label: "Ciudad", icon: <FaCity />, type: "text" },
-        { name: "codigoPostal", label: "Código Postal", icon: <FaMapPin />, type: "number" },
+        { name: "codigoPostal", label: "Código Postal", icon: <FaMapPin />, type: "text" },
     ];
 
     // ===================== EFECTOS (LIFECYCLE) =====================
@@ -71,7 +71,7 @@ export default function Personas() {
                 email: persona.email,
                 direccion: persona.direccion,
                 ciudad: persona.ciudad,
-                codigoPostal: persona.codigo_postal,
+                codigoPostal: persona.codigo_postal || "",
             });
         } else {
             // Modo creación: limpiar formulario
@@ -109,8 +109,13 @@ export default function Personas() {
         try {
             // Preparar datos para la API (ajustar nombres de campos si es necesario)
             const datosEnvio = {
-                ...formulario,
-                codigo_postal: Number(formulario.codigoPostal)
+                nombre: formulario.nombre,
+                apellido: formulario.apellido,
+                telefono: formulario.telefono,
+                email: formulario.email,
+                direccion: formulario.direccion,
+                ciudad: formulario.ciudad,
+                codigo_postal: formulario.codigoPostal,
             };
 
             if (personaToEdit) {
